@@ -34,8 +34,9 @@
 
 // ---------------- Burst behavior ----------------
 static const uint8_t  BURST_COUNT      = 5;
-static const uint32_t BURST_PERIOD_MS  = 100000;              // every 100 seconds
+static const uint32_t BURST_PERIOD_MS  = 300000;              // every 300 seconds
 static const uint32_t INTER_SEND_MS    = BURST_PERIOD_MS / 5; // 20000ms
+static const uint32_t REC_ACK_WAIT     = 1200000; //20 mins
 
 // ---------------- Sensor config ----------------
 #define ANALOG_PIN                                  1  // <-- set your actual ADC pin
@@ -281,8 +282,8 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 
   // If ACK received, restart with a NEW reading/burst
   if (strcmp(rxpacket, ACK_TOKEN) == 0) {
-    Serial.println("ACK received -> restarting with a new reading");
-
+    Serial.println("ACK received -> waiting for 20 mins -> restarting with a new reading");
+    delay(REC_ACK_WAIT);
     ackRestartRequested = true;
 
     // Clear current burst state so next schedule pass starts immediately
